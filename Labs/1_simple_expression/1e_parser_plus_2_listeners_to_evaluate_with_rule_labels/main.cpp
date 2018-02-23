@@ -27,7 +27,12 @@ public:
     stack.pop();
     int left = stack.top();
     stack.pop();
-    stack.push(left*right);
+    // ctx -> e(_) to get sign (+|-); check in 1.e
+    if () {
+        stack.push(left*right);
+    }else {
+        (right != 0 ? stack.push(left/right) : std::cout << "ERROR: Division by 0!!!\n");
+    }
   }
 
   
@@ -36,6 +41,7 @@ public:
     stack.pop();
     int left = stack.top();
     stack.pop();
+    // ctx -> e(_) to get sign (+|-); check in 1.e
     stack.push(left+right);
   }
   
@@ -59,7 +65,6 @@ public:
     int left = stack.top();
     stack.pop();
     
-    (right != 0 ? stack.push(left/right) : std::cout << "ERROR: Division by 0!!!\n");
   }
 
   void exitValue(ExprParser::ValueContext *ctx) {
