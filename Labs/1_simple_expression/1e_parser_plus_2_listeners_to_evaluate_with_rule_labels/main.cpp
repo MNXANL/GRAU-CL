@@ -22,7 +22,7 @@ public:
 
   std::stack<int> stack;
 
-  void exitProd(ExprParser::ProdContext *ctx) {
+  void exitMultdiv(ExprParser::ProdContext *ctx) {
     int right = stack.top();
     stack.pop();
     int left = stack.top();
@@ -30,20 +30,13 @@ public:
     stack.push(left*right);
   }
 
-  void exitPlus(ExprParser::PlusContext *ctx) {
+  
+  void exitPlusminus(ExprParser::PlusContext *ctx) {
     int right = stack.top();
     stack.pop();
     int left = stack.top();
     stack.pop();
     stack.push(left+right);
-  }
-  
-  void exitMinus(ExprParser::PlusContext *ctx) {
-    int right = stack.top();
-    stack.pop();
-    int left = stack.top();
-    stack.pop();
-    stack.push(left-right);
   }
   
   void exitNeg(ExprParser::PlusContext *ctx) {
