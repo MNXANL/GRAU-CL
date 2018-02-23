@@ -28,9 +28,9 @@ public:
     int left = stack.top();
     stack.pop();
     // ctx -> e(_) to get sign (+|-); check in 1.e
-    if () {
+    if (ctx -> op -> getType() == ExprParser::MULT) {
         stack.push(left*right);
-    }else {
+    } else {  //ExprParser::DIV
         (right != 0 ? stack.push(left/right) : std::cout << "ERROR: Division by 0!!!\n");
     }
   }
@@ -41,8 +41,10 @@ public:
     stack.pop();
     int left = stack.top();
     stack.pop();
-    // ctx -> e(_) to get sign (+|-); check in 1.e
-    stack.push(left+right);
+    if (ctx -> op -> getType() == ExprParser::ADD)
+      stack.push(left+right);
+    else 
+      stack.push(left-right);
   }
   
   void exitNeg(ExprParser::PlusContext *ctx) {
@@ -59,13 +61,6 @@ public:
     stack.push(left-right);
   }
   
-  void exitDiv(ExprParser::PlusContext *ctx) {
-    int right = stack.top();
-    stack.pop();
-    int left = stack.top();
-    stack.pop();
-    
-  }
 
   void exitValue(ExprParser::ValueContext *ctx) {
     int val = std::stoi(ctx->getText()); 
@@ -94,20 +89,15 @@ public:
     values.put(ctx, left*right);
   }
 
-  void exitPlus(ExprParser::PlusContext *ctx) {
-    int left = values.get(ctx->e(0));
-    int right = values.get(ctx->e(1));
+  void exitPlusminus(ExprParser::PlusContext *ctx) {
+    int left  = values.get(ctx -> e(0));
+    int right = values.get(ctx -> e(1));
     values.put(ctx, left+right);
   }
   
-  void exitMinus(ExprParser::PlusContext *ctx) {
-    int left = values.get(ctx->e(0));
-    int right = values.get(ctx->e(1));
-    values.put(ctx, left-right);
-  }
   
-  void exitMinus(ExprParser::PlusContext *ctx) {
-    int val = values.get(ctx->e(0));
+  void exitNeg(ExprParser::PlusContext *ctx) {
+    int val = values.get(ctx -> e()); // === ctx -> e(0)
     values.put(ctx, -val);
   }
   
