@@ -19,44 +19,29 @@
 // Sample "calculator" (special case of collector)
 class Evaluator : public ExprBaseListener {
 public:
-
+  
   std::stack<int> stack;
 
-  void exitProdDIV(ExprParser::ProdContext *ctx) {
-    int right = stack.top();
-    stack.pop();
-    int left = stack.top();
-    stack.pop();
-    if (ctx -> op -> getType() == ExprParser::MULT) {
+  void exitE(ExprParser::EContext *ctx) {
+    if (ctx->children.size() == 3) { // operations have 3 children
+      int right = stack.top();
+      stack.pop();
+      int left = stack.top();
+      stack.pop();
+      if (ctx->op->getType() == ExprParser::MULT) {
         stack.push(left*right);
-    } else {  //ExprParser::DIV
-        if (right != 0) 
-            stack.push(left/right);
-        else 
-            std::cout << "ERROR: Division by 0!!!\n";
+      }
+      else {
+        stack.push(left+right); // must be add
+      }
+    }    
+  }
+
+  void visitTerminal(antlr4::tree::TerminalNode *node) {
+    antlr4::Token *symbol = node->getSymbol();
+    if (symbol->getType() == ExprParser::INT) {
+      stack.push(std::stoi(symbol->getText()));
     }
-  }
-
-  void exitPlusminus(ExprParser::PlusContext *ctx) {
-    int right = stack.top();
-    stack.pop();
-    int left = stack.top();
-    stack.pop();
-    if (ctx -> op -> getType() == ExprParser::ADD)
-      stack.push(left+right);
-    else 
-      stack.push(left-right);
-  }
-  
-  void exitNeg(ExprParser::PlusContext *ctx) {
-    int val = stack.top();
-    stack.pop();
-    stack.push(-val);
-  }
-
-  void exitValue(ExprParser::ValueContext *ctx) {
-    int val = std::stoi(ctx->getText()); 
-    stack.push(val);
   }
 
 };
@@ -75,35 +60,27 @@ public:
     values.put(ctx, values.get(ctx->e()));
   }
 
-  void exitProddiv(ExprParser::ProdContext *ctx) {
-    int left = values.get(ctx->e(0));
-    int right = values.get(ctx->e(1));
-    if (ctx -> op -> getType() == ExprParser::MULT)
+  void exitE(ExprParser::EContext *ctx) {
+    if (ctx->children.size() == 3) { // operations have 3 children
+      int left = values.get(ctx->e(0));
+      int right = values.get(ctx->e(1));
+      if (ctx->op->getType() == ExprParser::MULT) {
         values.put(ctx, left*right);
-    else
-        if (right != 0) 
-            values.put(ctx, left/right);
-        else 
-            std::cout << "ERROR: Division by 0!!!\n";
+      }
+      else {
+        values.put(ctx, left+right);
+      }
+    }
+    else {
+      values.put(ctx, values.get(ctx->INT())); // an INT
+    }
   }
 
-  void exitPlusminus(ExprParser::PlusContext *ctx) {
-    int left = values.get(ctx->e(0));
-    int right = values.get(ctx->e(1));
-    if (ctx -> op -> getType() == ExprParser::ADD)
-        values.put(ctx, left*right);
-    else
-        values.put(ctx, left/right);
-  }
-
-  void exitNeg(ExprParser::ValueContext *ctx) {
-    int val = std::stoi(ctx->getText());
-    values.put(ctx, -val); // an INT
-  }
-  
-  void exitValue(ExprParser::ValueContext *ctx) {
-    int val = std::stoi(ctx->getText());
-    values.put(ctx, val); // an INT
+  void visitTerminal(antlr4::tree::TerminalNode *node) {
+    antlr4::Token *symbol = node->getSymbol();
+    if (symbol->getType() == ExprParser::INT) {
+      values.put(node, std::stoi(symbol->getText()));
+    }
   }
 
 };
@@ -146,7 +123,7 @@ int main(int argc, const char* argv[]) {
   antlr4::tree::ParseTreeWalker walker;
   
   // Create a first listener (with stack) that will evaluate the expression
-   Evaluator eval;
+  Evaluator eval;
 
   // Traverse the tree using this Evaluator  
   walker.walk(&eval, tree);

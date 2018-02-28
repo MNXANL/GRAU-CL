@@ -77,13 +77,13 @@ ANTLR4FLAGS += -o $(GENDIR)
 endif
 
 # The root directory of your antlr4 runtime is ...
-ANTLR_ROOT := /usr/local
+ANTLR_ROOT := /usr
 
 # Where to find various parts of the runtime files
-INCDIR		:= $(ANTLR_ROOT)/include/antlr4-runtime/
+INCDIR		:= $(ANTLR_ROOT)/include/antlr/
 LIBDIR		:= $(ANTLR_ROOT)/lib/
 BINDIR		:= $(ANTLR_ROOT)/bin
-ANTLR4		:= $(BINDIR)/antlr4
+ANTLR4		:= # $(BINDIR)/antlr4
 
 # The minimal set of generated files needed for any grammar.
 ifneq ($(strip $(GENDIR) ),)	# if GENDIR was defined
