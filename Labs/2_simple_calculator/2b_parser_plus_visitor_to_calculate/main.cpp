@@ -45,7 +45,7 @@ public:
   }
   
   /**  expr op=FACT */
-  antlrcpp::Any visitSign(CalcParser::SignContext *ctx) {
+  antlrcpp::Any visitFact(CalcParser::FactContext *ctx) {
     // get value of left subexpression
     int val = visit(ctx->expr()); 
     return fact(val);
@@ -106,24 +106,32 @@ public:
   antlrcpp::Any visitAbs(CalcParser::AbsContext *ctx) {
     return abs(visit(ctx->expr()));
     
-    //int val = visit(ctx->expr(0)); // get value of expression
+    //int val = visit(ctx->expr()); // get value of expression
     //return (val ^ (n >> sizeof(int))) - (val >> sizeof(int)); //bithax
   }
   
   
   /** op=MAX expr_list */
   antlrcpp::Any visitMax(CalcParser::MaxContext *ctx) {
-    return visitChildren(ctx);
+    int max = visit(ctx -> expr_list() ->expr(0));
+    for (auto eCtx : ctx -> expr_list() -> expr()) {
+        int v = visit(eCtx);
+        if (v > max) max = v;
+    }
+    return max;
   }
   
   
   /** op=SUM expr_list */
   antlrcpp::Any visitSum(CalcParser::SumContext *ctx) {
+    int sum = 0;
     if (ctx -> expr_list()) {
-        return visitChildren(ctx);
-    } else {
-        return 0;
+        for (auto eCtx : ctx -> expr_list() -> expr()) {
+            int x = visit(eCtx);
+            sum = sum + x;
+        }
     }
+    return sum;
         
   }
   

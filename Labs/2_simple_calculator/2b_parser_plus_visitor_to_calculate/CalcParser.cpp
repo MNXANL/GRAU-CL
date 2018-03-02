@@ -646,41 +646,34 @@ CalcParser::Expr_listContext::Expr_listContext(ParserRuleContext *parent, size_t
   : ParserRuleContext(parent, invokingState) {
 }
 
+std::vector<CalcParser::ExprContext *> CalcParser::Expr_listContext::expr() {
+  return getRuleContexts<CalcParser::ExprContext>();
+}
+
+CalcParser::ExprContext* CalcParser::Expr_listContext::expr(size_t i) {
+  return getRuleContext<CalcParser::ExprContext>(i);
+}
+
+std::vector<tree::TerminalNode *> CalcParser::Expr_listContext::COMMA() {
+  return getTokens(CalcParser::COMMA);
+}
+
+tree::TerminalNode* CalcParser::Expr_listContext::COMMA(size_t i) {
+  return getToken(CalcParser::COMMA, i);
+}
+
 
 size_t CalcParser::Expr_listContext::getRuleIndex() const {
   return CalcParser::RuleExpr_list;
 }
 
-void CalcParser::Expr_listContext::copyFrom(Expr_listContext *ctx) {
-  ParserRuleContext::copyFrom(ctx);
-}
-
-//----------------- ExprlistContext ------------------------------------------------------------------
-
-std::vector<CalcParser::ExprContext *> CalcParser::ExprlistContext::expr() {
-  return getRuleContexts<CalcParser::ExprContext>();
-}
-
-CalcParser::ExprContext* CalcParser::ExprlistContext::expr(size_t i) {
-  return getRuleContext<CalcParser::ExprContext>(i);
-}
-
-std::vector<tree::TerminalNode *> CalcParser::ExprlistContext::COMMA() {
-  return getTokens(CalcParser::COMMA);
-}
-
-tree::TerminalNode* CalcParser::ExprlistContext::COMMA(size_t i) {
-  return getToken(CalcParser::COMMA, i);
-}
-
-CalcParser::ExprlistContext::ExprlistContext(Expr_listContext *ctx) { copyFrom(ctx); }
-
-antlrcpp::Any CalcParser::ExprlistContext::accept(tree::ParseTreeVisitor *visitor) {
+antlrcpp::Any CalcParser::Expr_listContext::accept(tree::ParseTreeVisitor *visitor) {
   if (auto parserVisitor = dynamic_cast<CalcVisitor*>(visitor))
-    return parserVisitor->visitExprlist(this);
+    return parserVisitor->visitExpr_list(this);
   else
     return visitor->visitChildren(this);
 }
+
 CalcParser::Expr_listContext* CalcParser::expr_list() {
   Expr_listContext *_localctx = _tracker.createInstance<Expr_listContext>(_ctx, getState());
   enterRule(_localctx, 6, CalcParser::RuleExpr_list);
@@ -690,7 +683,6 @@ CalcParser::Expr_listContext* CalcParser::expr_list() {
     exitRule();
   });
   try {
-    _localctx = dynamic_cast<Expr_listContext *>(_tracker.createInstance<CalcParser::ExprlistContext>(_localctx));
     enterOuterAlt(_localctx, 1);
     setState(69);
     expr(0);

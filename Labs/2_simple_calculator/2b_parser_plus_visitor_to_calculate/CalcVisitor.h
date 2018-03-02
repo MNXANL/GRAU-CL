@@ -45,7 +45,7 @@ public:
 
     virtual antlrcpp::Any visitPlus(CalcParser::PlusContext *context) = 0;
 
-    virtual antlrcpp::Any visitExprlist(CalcParser::ExprlistContext *context) = 0;
+    virtual antlrcpp::Any visitExpr_list(CalcParser::Expr_listContext *context) = 0;
 
 
 };

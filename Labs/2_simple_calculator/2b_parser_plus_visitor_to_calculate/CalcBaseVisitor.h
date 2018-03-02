@@ -67,7 +67,7 @@ public:
     return visitChildren(ctx);
   }
 
-  virtual antlrcpp::Any visitExprlist(CalcParser::ExprlistContext *ctx) override {
+  virtual antlrcpp::Any visitExpr_list(CalcParser::Expr_listContext *ctx) override {
     return visitChildren(ctx);
   }
 

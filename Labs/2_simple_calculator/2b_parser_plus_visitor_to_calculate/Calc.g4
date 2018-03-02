@@ -21,7 +21,7 @@ expr:   expr op=FACT                # fact
     ;
 
    
-expr_list: expr (COMMA expr)*   #exprlist
+expr_list: expr (COMMA expr)*   
     ;
     
 COMMA: ',';

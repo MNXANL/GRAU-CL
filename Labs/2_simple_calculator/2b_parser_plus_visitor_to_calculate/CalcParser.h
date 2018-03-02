@@ -201,25 +201,14 @@ public:
   class  Expr_listContext : public antlr4::ParserRuleContext {
   public:
     Expr_listContext(antlr4::ParserRuleContext *parent, size_t invokingState);
-   
-    Expr_listContext() : antlr4::ParserRuleContext() { }
-    void copyFrom(Expr_listContext *context);
-    using antlr4::ParserRuleContext::copyFrom;
-
     virtual size_t getRuleIndex() const override;
-
-   
-  };
-
-  class  ExprlistContext : public Expr_listContext {
-  public:
-    ExprlistContext(Expr_listContext *ctx);
-
     std::vector<ExprContext *> expr();
     ExprContext* expr(size_t i);
     std::vector<antlr4::tree::TerminalNode *> COMMA();
     antlr4::tree::TerminalNode* COMMA(size_t i);
+
     virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
+   
   };
 
   Expr_listContext* expr_list();
