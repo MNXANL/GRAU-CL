@@ -17,14 +17,23 @@ public:
   virtual void enterS(ExprParser::SContext *ctx) = 0;
   virtual void exitS(ExprParser::SContext *ctx) = 0;
 
-  virtual void enterProd(ExprParser::ProdContext *ctx) = 0;
-  virtual void exitProd(ExprParser::ProdContext *ctx) = 0;
+  virtual void enterMaxmin(ExprParser::MaxminContext *ctx) = 0;
+  virtual void exitMaxmin(ExprParser::MaxminContext *ctx) = 0;
+
+  virtual void enterNeg(ExprParser::NegContext *ctx) = 0;
+  virtual void exitNeg(ExprParser::NegContext *ctx) = 0;
+
+  virtual void enterPlusminus(ExprParser::PlusminusContext *ctx) = 0;
+  virtual void exitPlusminus(ExprParser::PlusminusContext *ctx) = 0;
+
+  virtual void enterPars(ExprParser::ParsContext *ctx) = 0;
+  virtual void exitPars(ExprParser::ParsContext *ctx) = 0;
+
+  virtual void enterProddiv(ExprParser::ProddivContext *ctx) = 0;
+  virtual void exitProddiv(ExprParser::ProddivContext *ctx) = 0;
 
   virtual void enterValue(ExprParser::ValueContext *ctx) = 0;
   virtual void exitValue(ExprParser::ValueContext *ctx) = 0;
-
-  virtual void enterPlus(ExprParser::PlusContext *ctx) = 0;
-  virtual void exitPlus(ExprParser::PlusContext *ctx) = 0;
 
 
 };

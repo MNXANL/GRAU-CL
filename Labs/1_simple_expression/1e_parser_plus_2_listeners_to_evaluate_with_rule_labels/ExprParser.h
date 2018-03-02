@@ -12,7 +12,8 @@
 class  ExprParser : public antlr4::Parser {
 public:
   enum {
-    MULT = 1, DIV = 2, SUB = 3, ADD = 4, INT = 5, WS = 6
+    MIN = 1, MAX = 2, L_PAR = 3, R_PAR = 4, AND = 5, OR = 6, NOT = 7, MULT = 8, 
+    DIV = 9, SUB = 10, ADD = 11, INT = 12, WS = 13, COMMA = 14
   };
 
   enum {
@@ -58,9 +59,62 @@ public:
    
   };
 
-  class  ProdContext : public EContext {
+  class  MaxminContext : public EContext {
   public:
-    ProdContext(EContext *ctx);
+    MaxminContext(EContext *ctx);
+
+    antlr4::Token *op = nullptr;
+    antlr4::Token *o = nullptr;
+    antlr4::tree::TerminalNode *L_PAR();
+    std::vector<EContext *> e();
+    EContext* e(size_t i);
+    std::vector<antlr4::tree::TerminalNode *> COMMA();
+    antlr4::tree::TerminalNode* COMMA(size_t i);
+    antlr4::tree::TerminalNode *R_PAR();
+    antlr4::tree::TerminalNode *MAX();
+    antlr4::tree::TerminalNode *MIN();
+    virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
+    virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
+  };
+
+  class  NegContext : public EContext {
+  public:
+    NegContext(EContext *ctx);
+
+    antlr4::Token *op = nullptr;
+    EContext *e();
+    antlr4::tree::TerminalNode *SUB();
+    virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
+    virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
+  };
+
+  class  PlusminusContext : public EContext {
+  public:
+    PlusminusContext(EContext *ctx);
+
+    antlr4::Token *op = nullptr;
+    std::vector<EContext *> e();
+    EContext* e(size_t i);
+    antlr4::tree::TerminalNode *ADD();
+    antlr4::tree::TerminalNode *SUB();
+    virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
+    virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
+  };
+
+  class  ParsContext : public EContext {
+  public:
+    ParsContext(EContext *ctx);
+
+    antlr4::tree::TerminalNode *L_PAR();
+    EContext *e();
+    antlr4::tree::TerminalNode *R_PAR();
+    virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
+    virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
+  };
+
+  class  ProddivContext : public EContext {
+  public:
+    ProddivContext(EContext *ctx);
 
     antlr4::Token *op = nullptr;
     std::vector<EContext *> e();
@@ -76,19 +130,6 @@ public:
     ValueContext(EContext *ctx);
 
     antlr4::tree::TerminalNode *INT();
-    virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
-    virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
-  };
-
-  class  PlusContext : public EContext {
-  public:
-    PlusContext(EContext *ctx);
-
-    antlr4::Token *op = nullptr;
-    std::vector<EContext *> e();
-    EContext* e(size_t i);
-    antlr4::tree::TerminalNode *ADD();
-    antlr4::tree::TerminalNode *SUB();
     virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
     virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
   };

@@ -22,22 +22,23 @@ public:
 
   std::stack<int> stack;
 
-  void exitProdDIV(ExprParser::ProdContext *ctx) {
+  void exitProddiv(ExprParser::ProddivContext *ctx) {
     int right = stack.top();
     stack.pop();
     int left = stack.top();
     stack.pop();
     if (ctx -> op -> getType() == ExprParser::MULT) {
         stack.push(left*right);
-    } else {  //ExprParser::DIV
-        if (right != 0) 
+    } else {//ctx->op->getType()==ExprParser::DIV
+        if (right != 0) {
             stack.push(left/right);
-        else 
+        } else {
             std::cout << "ERROR: Division by 0!!!\n";
+        }
     }
   }
 
-  void exitPlusminus(ExprParser::PlusContext *ctx) {
+  void exitPlusminus(ExprParser::PlusminusContext *ctx) {
     int right = stack.top();
     stack.pop();
     int left = stack.top();
@@ -48,12 +49,54 @@ public:
       stack.push(left-right);
   }
   
-  void exitNeg(ExprParser::PlusContext *ctx) {
+  void exitNeg(ExprParser::NegContext *ctx) {
     int val = stack.top();
     stack.pop();
     stack.push(-val);
   }
 
+  void exitPars(ExprParser::ParsContext *ctx) {
+    /*int val = stack.top();
+    stack.pop();
+    stack.push(val);*/
+  }
+  
+  int max(int &a, int &b) {
+    if (a>b) 
+        return a;
+    else 
+        return b;
+  }
+  
+  int min(int &a, int &b) {
+    if (a<b) 
+        return a;
+    else 
+        return b;
+  }
+  
+  void exitMaxmin(ExprParser::MaxminContext *ctx) {
+    int N = ctx -> children.size() - 2;
+    int base = stack.top(); //Base case
+    stack.pop();    
+    if (ctx -> op -> getType() == ExprParser::MAX) {
+        for (int i = 0; i != N; ++i) {
+            int cmp = stack.top(); // Recurrent case
+            stack.pop();
+            base = max(base, cmp);
+        }
+        stack.push(base);
+    }
+    else {//(ctx -> op -> getType() == ExprParser::MIN) 
+        for (int i = 0; i != N; ++i) {
+            int cmp = stack.top(); // Recurrent case
+            stack.pop();
+            base = min(base, cmp);
+        }
+        stack.push(base);
+    }
+  }
+    
   void exitValue(ExprParser::ValueContext *ctx) {
     int val = std::stoi(ctx->getText()); 
     stack.push(val);
@@ -75,7 +118,7 @@ public:
     values.put(ctx, values.get(ctx->e()));
   }
 
-  void exitProddiv(ExprParser::ProdContext *ctx) {
+  void exitProddiv(ExprParser::ProddivContext *ctx) {
     int left = values.get(ctx->e(0));
     int right = values.get(ctx->e(1));
     if (ctx -> op -> getType() == ExprParser::MULT)
@@ -87,7 +130,7 @@ public:
             std::cout << "ERROR: Division by 0!!!\n";
   }
 
-  void exitPlusminus(ExprParser::PlusContext *ctx) {
+  void exitPlusminus(ExprParser::PlusminusContext *ctx) {
     int left = values.get(ctx->e(0));
     int right = values.get(ctx->e(1));
     if (ctx -> op -> getType() == ExprParser::ADD)
@@ -96,10 +139,49 @@ public:
         values.put(ctx, left/right);
   }
 
-  void exitNeg(ExprParser::ValueContext *ctx) {
+  void exitNeg(ExprParser::NegContext *ctx) {
     int val = std::stoi(ctx->getText());
     values.put(ctx, -val); // an INT
   }
+  
+  void exitPars(ExprParser::ParsContext *ctx) {
+    int val = std::stoi(ctx->getText());
+    values.put(ctx, val); // an INT
+  }
+  
+  int max(int &a, int &b) {
+    if (a>b) 
+        return a;
+    else 
+        return b;
+  }
+  
+  int min(int &a, int &b) {
+    if (a<b) 
+        return a;
+    else 
+        return b;
+  }
+  
+  void exitMaxmin(ExprParser::MaxminContext *ctx) {
+    int N = ctx -> children.size() - 2;
+    int base = values.get(ctx->e(0));
+    if (ctx -> op -> getType() == ExprParser::MAX) {
+        for (int i = 1; i != N; ++i) {
+            int cmp = values.get(ctx->e(i));
+            base = max(base, cmp);
+        }
+        values.put(ctx, base);
+    }
+    else {//(ctx -> op -> getType() == ExprParser::MIN) 
+        for (int i = 1; i != N; ++i) {
+            int cmp = values.get(ctx->e(i));
+            base = min(base, cmp);
+        }
+        values.put(ctx, base);
+    }
+  }
+  
   
   void exitValue(ExprParser::ValueContext *ctx) {
     int val = std::stoi(ctx->getText());

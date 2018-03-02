@@ -1,5 +1,5 @@
 
-// Generated from Expr.g4 by ANTLR 4.7.1
+// Generated from Calc.g4 by ANTLR 4.7.1
 
 #pragma once
 
@@ -9,15 +9,16 @@
 
 
 
-class  ExprLexer : public antlr4::Lexer {
+class  CalcLexer : public antlr4::Lexer {
 public:
   enum {
-    MIN = 1, MAX = 2, L_PAR = 3, R_PAR = 4, AND = 5, OR = 6, NOT = 7, MULT = 8, 
-    DIV = 9, SUB = 10, ADD = 11, INT = 12, WS = 13
+    T__0 = 1, T__1 = 2, T__2 = 3, COMMA = 4, ABS = 5, MAX = 6, MIN = 7, 
+    SUM = 8, PROD = 9, FACT = 10, DIV = 11, MUL = 12, SUB = 13, ADD = 14, 
+    ID = 15, INT = 16, NEWLINE = 17, WS = 18
   };
 
-  ExprLexer(antlr4::CharStream *input);
-  ~ExprLexer();
+  CalcLexer(antlr4::CharStream *input);
+  ~CalcLexer();
 
   virtual std::string getGrammarFileName() const override;
   virtual const std::vector<std::string>& getRuleNames() const override;

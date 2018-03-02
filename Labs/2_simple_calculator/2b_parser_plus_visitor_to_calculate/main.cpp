@@ -38,22 +38,97 @@ public:
     std::cout << value << std::endl;        // print the result
     return 0;                               // return dummy value
   }
+  
+  int fact(int n) {
+      if (n < 1) return 1;
+      else return n * fact(n-1);
+  }
+  
+  /**  expr op=FACT */
+  antlrcpp::Any visitSign(CalcParser::SignContext *ctx) {
+    // get value of left subexpression
+    int val = visit(ctx->expr()); 
+    return fact(val);
+  }
+  
+  
+  /** op=ADD/SUB expr */
+  antlrcpp::Any visitSigne(CalcParser::SigneContext *ctx) {
+    // get value of left subexpression
+    int val = visit(ctx->expr()); 
+    
+    if (ctx->op->getType() == CalcParser::ADD) 
+        return +val;
+    else //ctx->op->getType() == CalcParser::SUB
+        return -val; 
+  }
+  
 
-  /** expr op=MUL expr */
+  /** expr op=MUL/DIV expr */
   antlrcpp::Any visitProd(CalcParser::ProdContext *ctx) {
     int left = visit(ctx->expr(0));         // get value of left subexpression
     int right = visit(ctx->expr(1));        // get value of right subexpression
     if (ctx->op->getType() == CalcParser::MUL) return left*right;
-    return left*right; // CURRENTLY is always MUL!!
+    else { //DIV
+        if (right != 0) {
+            return left/right;
+        }
+        else {
+            std::cout << "ERROR! You just can't divide by zero.\n";
+            return 0;
+        }
+    }
   }
   
-  /** expr op=ADD expr */
+  
+ 
+  
+  /** expr op=ADD/SUB expr */
   antlrcpp::Any visitPlus(CalcParser::PlusContext *ctx) {
-    int left = visit(ctx->expr(0));         // get value of left subexpression
-    int right = visit(ctx->expr(1));        // get value of right subexpression
-    if (ctx->op->getType() == CalcParser::ADD) return left+right;
-    return left+right; // CURRENTLY is always ADD!!
+    // get value of left subexpression
+    int left = visit(ctx->expr(0));         
+    
+    // get value of right subexpression
+    int right = visit(ctx->expr(1));        
+    
+    if (ctx->op->getType() == CalcParser::ADD) {
+        return left+right;
+    } else { //ctx->op->getType() == CalcParser::SUB
+        return left-right; 
+    }
   }
+  
+  
+  /////////////////////////////////////////////////////
+  
+  
+  /** op=ABS expr */
+  antlrcpp::Any visitAbs(CalcParser::AbsContext *ctx) {
+    return abs(visit(ctx->expr()));
+    
+    //int val = visit(ctx->expr(0)); // get value of expression
+    //return (val ^ (n >> sizeof(int))) - (val >> sizeof(int)); //bithax
+  }
+  
+  
+  /** op=MAX expr_list */
+  antlrcpp::Any visitMax(CalcParser::MaxContext *ctx) {
+    return visitChildren(ctx);
+  }
+  
+  
+  /** op=SUM expr_list */
+  antlrcpp::Any visitSum(CalcParser::SumContext *ctx) {
+    if (ctx -> expr_list()) {
+        return visitChildren(ctx);
+    } else {
+        return 0;
+    }
+        
+  }
+  
+  
+  
   
   /** INT */
   antlrcpp::Any visitInt(CalcParser::IntContext *ctx) {

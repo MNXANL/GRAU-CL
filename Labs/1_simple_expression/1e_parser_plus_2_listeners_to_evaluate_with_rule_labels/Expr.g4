@@ -1,8 +1,8 @@
 grammar Expr;
 
 s : e ;
-e : MAX L_PAR e COMMA e (L_PAR COMMA e)* R_PAR	# maxmin
-  | L_PAR e R_PAR   			# parenthesis
+e : (op=MAX|o=MIN) L_PAR e COMMA e (COMMA e)* R_PAR  # maxmin
+  | L_PAR e R_PAR         # pars
   | op=SUB e              # neg
   | e (op=MULT|op=DIV) e  # proddiv
   | e (op=ADD|op=SUB) e   # plusminus
@@ -17,8 +17,8 @@ MAX : 'max' ;
 L_PAR: '(' ;
 R_PAR: ')' ;
 
-AND : '&&';
-OR : '||';
+AND : '&';
+OR : 'v';
 NOT : '!' ;
 
 MULT: '*' ;

@@ -19,14 +19,23 @@ public:
   virtual void enterS(ExprParser::SContext * /*ctx*/) override { }
   virtual void exitS(ExprParser::SContext * /*ctx*/) override { }
 
-  virtual void enterProd(ExprParser::ProdContext * /*ctx*/) override { }
-  virtual void exitProd(ExprParser::ProdContext * /*ctx*/) override { }
+  virtual void enterMaxmin(ExprParser::MaxminContext * /*ctx*/) override { }
+  virtual void exitMaxmin(ExprParser::MaxminContext * /*ctx*/) override { }
+
+  virtual void enterNeg(ExprParser::NegContext * /*ctx*/) override { }
+  virtual void exitNeg(ExprParser::NegContext * /*ctx*/) override { }
+
+  virtual void enterPlusminus(ExprParser::PlusminusContext * /*ctx*/) override { }
+  virtual void exitPlusminus(ExprParser::PlusminusContext * /*ctx*/) override { }
+
+  virtual void enterPars(ExprParser::ParsContext * /*ctx*/) override { }
+  virtual void exitPars(ExprParser::ParsContext * /*ctx*/) override { }
+
+  virtual void enterProddiv(ExprParser::ProddivContext * /*ctx*/) override { }
+  virtual void exitProddiv(ExprParser::ProddivContext * /*ctx*/) override { }
 
   virtual void enterValue(ExprParser::ValueContext * /*ctx*/) override { }
   virtual void exitValue(ExprParser::ValueContext * /*ctx*/) override { }
-
-  virtual void enterPlus(ExprParser::PlusContext * /*ctx*/) override { }
-  virtual void exitPlus(ExprParser::PlusContext * /*ctx*/) override { }
 
 
   virtual void enterEveryRule(antlr4::ParserRuleContext * /*ctx*/) override { }
